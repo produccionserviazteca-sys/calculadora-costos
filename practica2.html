@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Formatos Administrativos</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 20px; }
+        .container { max-width: 800px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .btn { background-color: #3498db; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn:hover { background-color: #2980b9; }
+        #preview { margin-top: 30px; padding: 20px; border: 1px dashed #ccc; display: none; }
+        @media print {
+            .no-print { display: none; }
+            #preview { display: block; border: none; }
+            body { background: white; margin: 0; }
+        }
+        .header-nota { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #444; padding: 8px; text-align: left; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+
+<div class="container no-print">
+    <h2>Generador de Formatos de Empresa</h2>
+    
+    <div class="form-group">
+        <label>Tipo de Documento:</label>
+        <select id="tipoDoc">
+            <option value="COTIZACIÓN">Nota de Cotización</option>
+            <option value="REMISIÓN">Nota de Remisión</option>
+            <option value="CRÉDITO">Nota de Crédito</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Nombre del Cliente:</label>
+        <input type="text" id="cliente" placeholder="Ej. Juan Pérez">
+    </div>
+
+    <div class="form-group">
+        <label>Descripción del Producto/Servicio:</label>
+        <textarea id="desc" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Monto Total ($):</label>
+        <input type="number" id="monto" step="0.01">
+    </div>
+
+    <button class="btn" onclick="generarNota()">Generar y Vista Previa</button>
+</div>
+
+<div id="preview"></div>
+
+<script>
+    function generarNota() {
+        const tipo = document.getElementById('tipoDoc').value;
+        const cliente = document.getElementById('cliente').value;
+        const desc = document.getElementById('desc').value;
+        const monto = parseFloat(document.getElementById('monto').value) || 0;
+        const fecha = new Date().toLocaleDateString();
+        
+        const subtotal = monto / 1.16;
+        const iva = monto - subtotal;
+
+        const contenido = `
+            <div class="header-nota">
+                <div>
+                    <h1 style="margin:0; color:#2c3e50;">${tipo}</h1>
+                    <p>Folio: #00125</p>
+                </div>
+                <div style="text-align:right;">
+                    <p><strong>Fecha:</strong> ${fecha}</p>
+                </div>
+            </div>
+            <p><strong>Cliente:</strong> ${cliente}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${desc}</td>
+                        <td>$${monto.toFixed(2)}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align:right;">
+                <p>Subtotal: $${subtotal.toFixed(2)}</p>
+                <p>IVA (16%): $${iva.toFixed(2)}</p>
+                <h3>TOTAL: $${monto.toFixed(2)}</h3>
+            </div>
+            <button class="btn no-print" onclick="window.print()">Imprimir Formato</button>
+        `;
+        
+        document.getElementById('preview').innerHTML = contenido;
+        document.getElementById('preview').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
