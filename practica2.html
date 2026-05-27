@@ -17,9 +17,19 @@
         #preview { margin-top: 30px; padding: 20px; border: 1px dashed #ccc; display: none; }
         
         .btn-regresar {
-            display: inline-flex; align-items: center; background-color: #0f172a; color: white; padding: 10px 18px;
-            border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem;
-            transition: background 0.2s ease; border: none; cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            background-color: #0f172a;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: background 0.2s ease;
+            border: none;
+            cursor: pointer;
         }
         .btn-regresar:hover { background-color: #3b82f6; color: white; }
         .btn-regresar::before { content: "⬅️"; margin-right: 8px; }
@@ -53,86 +63,4 @@
 
     <div class="form-group">
         <label>Nombre del Cliente:</label>
-        <input type="text" id="cliente" placeholder="Ej. Juan Pérez">
-    </div>
-
-    <div class="form-group">
-        <label>Descripción del Producto/Servicio:</label>
-        <textarea id="desc" rows="3"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label>Monto Total ($):</label>
-        <input type="number" id="monto" step="0.01">
-    </div>
-
-    <button class="btn" onclick="generarNota()">Generar y Vista Previa</button>
-    <button class="btn btn-save" onclick="enviarFormato()">💾 Guardar en la Nube</button>
-</div>
-
-<div id="preview"></div>
-
-<script>
-    // URL Vinculada correctamente a tu Sheets
-    const WEBHOOK_URL = "https://script.google.com/macros/s/1cyzm9ukW4kK3TSjpVexWXap3ceT8Tu6NWyPFLyez1cKSSbnI/exec";
-
-    function generarNota() {
-        const tipo = document.getElementById('tipoDoc').value;
-        const cliente = document.getElementById('cliente').value;
-        const desc = document.getElementById('desc').value;
-        const monto = parseFloat(document.getElementById('monto').value) || 0;
-        const fecha = new Date().toLocaleDateString();
-        
-        const subtotal = monto / 1.16;
-        const iva = monto - subtotal;
-
-        const contenido = `
-            <div class="header-nota">
-                <div>
-                    <h1 style="margin:0; color:#2c3e50;">${tipo}</h1>
-                    <p>Folio: #00125</p>
-                </div>
-                <div style="text-align:right;">
-                    <p><strong>Fecha:</strong> ${fecha}</p>
-                </div>
-            </div>
-            <p><strong>Cliente:</strong> ${cliente}</p>
-            <table>
-                <thead><tr><th>Descripción</th><th>Total</th></tr></thead>
-                <tbody><tr><td>${desc}</td><td>$${monto.toFixed(2)}</td></tr></tbody>
-            </table>
-            <div style="text-align:right;">
-                <p>Subtotal: $${subtotal.toFixed(2)}</p>
-                <p>IVA (16%): $${iva.toFixed(2)}</p>
-                <h3>TOTAL: $${monto.toFixed(2)}</h3>
-            </div>
-            <button class="btn no-print" onclick="window.print()">Imprimir Formato</button>
-        `;
-        
-        document.getElementById('preview').innerHTML = contenido;
-        document.getElementById('preview').style.display = 'block';
-    }
-
-    function enviarFormato() {
-        const tipo = document.getElementById('tipoDoc').value;
-        const cliente = document.getElementById('cliente').value;
-        const desc = document.getElementById('desc').value;
-        const monto = document.getElementById('monto').value;
-
-        if(!cliente || !monto) { alert("Por favor llena los campos obligatorios."); return; }
-
-        fetch(WEBHOOK_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                sheet: "Formatos",
-                row: [tipo, cliente, desc, monto]
-            })
-        }).then(() => {
-            alert("¡Formato registrado con éxito en la nube!");
-        }).catch(err => alert("Error al conectar con la nube: " + err));
-    }
-</script>
-</body>
-</html>
+        <input type="text" id
