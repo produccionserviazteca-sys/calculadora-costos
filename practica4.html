@@ -9,10 +9,34 @@
         body { background-color: #f8f9fa; }
         .card { border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .result-box { background-color: #e9ecef; border-left: 5px solid #0d6efd; }
+        
+        /* Botón Corporativo de Regresar */
+        .btn-regresar {
+            display: inline-flex;
+            align-items: center;
+            background-color: #0f172a;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: background 0.2s ease;
+            border: none;
+        }
+        .btn-regresar:hover { background-color: #3b82f6; color: white; }
+        .btn-regresar::before { content: "⬅️"; margin-right: 8px; }
     </style>
 </head>
 <body>
     <div class="container py-5">
+        <div class="row justify-content-center mb-2">
+            <div class="col-md-6">
+                <a href="index.html" class="btn-regresar">Volver al Menú Principal</a>
+            </div>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card p-4">
@@ -30,7 +54,7 @@
                                 <option value="0.180">Papel Higiénico Sencillo (180g/rollo)</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Calcular Producción Estimada</button>
+                        <button type="submit" class="btn btn-primary w-100">Calcular Production Estimada</button>
                     </form>
 
                     <div id="resultado" class="mt-4 p-3 result-box d-none">
@@ -48,7 +72,6 @@
             const peso = parseFloat(document.getElementById('pesoBobina').value);
             const factor = parseFloat(document.getElementById('tipoProducto').value);
             
-            // Lógica: Peso total / peso por unidad (restando 2% de merma técnica)
             const unidades = Math.floor((peso * 0.98) / factor);
             
             const resDiv = document.getElementById('resultado');
