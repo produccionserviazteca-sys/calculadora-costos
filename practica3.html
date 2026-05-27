@@ -5,77 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Inventario - Fábrica de Papel</title>
     <style>
-        :root {
-            --primary: #1e293b;
-            --accent: #0ea5e9;
-            --success: #10b981;
-            --danger: #f43f5e;
-            --bg: #f8fafc;
-        }
-
+        :root { --primary: #1e293b; --accent: #0ea5e9; --success: #10b981; --danger: #f43f5e; --bg: #f8fafc; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--primary); }
         .container { max-width: 900px; margin: 0 auto; }
         
-        /* Botón Corporativo de Regresar */
         .btn-regresar {
-            display: inline-flex;
-            align-items: center;
-            background-color: #0f172a;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            transition: background 0.2s ease;
-            border: none;
-            cursor: pointer;
+            display: inline-flex; align-items: center; background-color: #0f172a; color: white; padding: 10px 18px;
+            border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem;
+            transition: background 0.2s ease; border: none; cursor: pointer;
         }
         .btn-regresar:hover { background-color: #3b82f6; }
         .btn-regresar::before { content: "⬅️"; margin-right: 8px; }
 
-        .header { 
-            text-align: center; 
-            padding: 20px; 
-            background: white; 
-            border-radius: 12px; 
-            margin-bottom: 20px;
-            border-bottom: 4px solid var(--accent);
-        }
-
+        .header { text-align: center; padding: 20px; background: white; border-radius: 12px; margin-bottom: 20px; border-bottom: 4px solid var(--accent); }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        .grid-form { 
-            display: grid; 
-            grid-template-columns: 2fr 1fr 1fr auto; 
-            gap: 15px; 
-            align-items: end; 
-        }
-
-        @media (max-width: 600px) {
-            .grid-form { grid-template-columns: 1fr; }
-        }
+        .grid-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end; }
+        @media (max-width: 600px) { .grid-form { grid-template-columns: 1fr; } }
         
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: #64748b; }
         input, select { padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; font-size: 1rem; }
-        
-        button { 
-            padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; 
-            font-weight: 700; transition: all 0.3s ease; 
-        }
-
-        .btn-add { background: var(--accent); color: white; }
-        .btn-add:hover { background: #0284c7; transform: translateY(-1px); }
+        button { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.3s ease; }
+        .btn-add { background: var(--success); color: white; }
+        .btn-add:hover { background: #059669; transform: translateY(-1px); }
 
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
         th { background: #f1f5f9; color: #475569; padding: 15px; text-align: left; font-size: 0.9rem; }
         td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
-
         .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         .stock-low { background: #fee2e2; color: var(--danger); }
         .stock-ok { background: #dcfce7; color: var(--success); }
-
         .btn-delete { background: none; color: #94a3b8; font-size: 0.8rem; border: 1px solid #e2e8f0; }
         .btn-delete:hover { border-color: var(--danger); color: var(--danger); }
     </style>
@@ -114,7 +72,7 @@
                     <option value="salida">Venta/Despacho (-)</option>
                 </select>
             </div>
-            <button class="btn-add" onclick="procesarMovimiento()">Actualizar Stock</button>
+            <button class="btn-add" onclick="procesarMovimiento()">💾 Guardar y Sincronizar</button>
         </div>
     </div>
 
@@ -123,24 +81,22 @@
             <thead>
                 <tr>
                     <th>Descripción del Producto</th>
-                    <th>Stock Actual</th>
+                    <th>Stock Actual (Local)</th>
                     <th>Estado de Almacén</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="cuerpoTabla">
-            </tbody>
+            <tbody id="cuerpoTabla"></tbody>
         </table>
     </div>
 </div>
 
 <script>
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyIGMX1NbdsvbDykqcYOCVwiIFwsOr-a7O_lSPjaOufq0kk9YGQdJ0WiuK9xrFjzfKI/exec";
+
     const productosBase = {
-        "Papel Higiénico (Pack 4)": 100,
-        "Papel Higiénico (Industrial)": 50,
-        "Servilletas (Paquete 50u)": 200,
-        "Servilletas (Cocktail)": 150,
-        "Materia Prima (Celulosa)": 30
+        "Papel Higiénico (Pack 4)": 100, "Papel Higiénico (Industrial)": 50,
+        "Servilletas (Paquete 50u)": 200, "Servilletas (Cocktail)": 150, "Materia Prima (Celulosa)": 30
     };
 
     let inventario = JSON.parse(localStorage.getItem('inventarioPapelera')) || productosBase;
@@ -150,22 +106,30 @@
         const cantidad = parseInt(document.getElementById('cantidad').value);
         const tipo = document.getElementById('tipo').value;
 
-        if (isNaN(cantidad) || cantidad <= 0) {
-            alert("Ingrese una cantidad válida");
-            return;
-        }
+        if (isNaN(cantidad) || cantidad <= 0) { alert("Ingrese una cantidad válida"); return; }
 
         if (tipo === 'entrada') {
             inventario[producto] += cantidad;
         } else {
             if (inventario[producto] < cantidad) {
-                alert(`Stock insuficiente de ${producto}. Solo quedan ${inventario[producto]} unidades.`);
+                alert(`Stock insuficiente. Solo quedan ${inventario[producto]} unidades.`);
                 return;
             }
             inventario[producto] -= cantidad;
         }
 
-        guardarYRenderizar();
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                sheet: "Produccion",
+                row: [producto, cantidad, tipo == 'entrada' ? 'Produccion (+)' : 'Venta (-)']
+            })
+        }).then(() => {
+            guardarYRenderizar();
+            alert("¡Movimiento reportado a la nube y actualizado!");
+        }).catch(err => alert("Error al subir a la nube: " + err));
     }
 
     function resetearStock(producto) {
@@ -177,30 +141,20 @@
 
     function guardarYRenderizar() {
         localStorage.setItem('inventarioPapelera', JSON.stringify(inventario));
-        
         const cuerpo = document.getElementById('cuerpoTabla');
         cuerpo.innerHTML = "";
-
         for (const [nombre, stock] of Object.entries(inventario)) {
             const esBajo = stock < 20;
-            const estadoClase = esBajo ? 'stock-low' : 'stock-ok';
-            const estadoTexto = esBajo ? 'Reabastecer' : 'Disponible';
-
             cuerpo.innerHTML += `
                 <tr>
                     <td><strong>${nombre}</strong></td>
                     <td style="font-size: 1.1rem">${stock}</td>
-                    <td><span class="badge ${estadoClase}">${estadoTexto}</span></td>
-                    <td>
-                        <button class="btn-delete" onclick="resetearStock('${nombre}')">Reset</button>
-                    </td>
-                </tr>
-            `;
+                    <td><span class="badge ${esBajo ? 'stock-low' : 'stock-ok'}">${esBajo ? 'Reabastecer' : 'Disponible'}</span></td>
+                    <td><button class="btn-delete" onclick="resetearStock('${nombre}')">Reset</button></td>
+                </tr>`;
         }
     }
-
     guardarYRenderizar();
 </script>
-
 </body>
 </html>
