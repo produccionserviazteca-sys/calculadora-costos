@@ -17,19 +17,9 @@
         #preview { margin-top: 30px; padding: 20px; border: 1px dashed #ccc; display: none; }
         
         .btn-regresar {
-            display: inline-flex;
-            align-items: center;
-            background-color: #0f172a;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            transition: background 0.2s ease;
-            border: none;
-            cursor: pointer;
+            display: inline-flex; align-items: center; background-color: #0f172a; color: white; padding: 10px 18px;
+            border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem;
+            transition: background 0.2s ease; border: none; cursor: pointer;
         }
         .btn-regresar:hover { background-color: #3b82f6; color: white; }
         .btn-regresar::before { content: "⬅️"; margin-right: 8px; }
@@ -83,7 +73,8 @@
 <div id="preview"></div>
 
 <script>
-    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyIGMX1NbdsvbDykqcYOCVwiIFwsOr-a7O_lSPjaOufq0kk9YGQdJ0WiuK9xrFjzfKI/exec";
+    // URL Vinculada correctamente a tu Sheets
+    const WEBHOOK_URL = "https://script.google.com/macros/s/1cyzm9ukW4kK3TSjpVexWXap3ceT8Tu6NWyPFLyez1cKSSbnI/exec";
 
     function generarNota() {
         const tipo = document.getElementById('tipoDoc').value;
