@@ -10,11 +10,12 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .btn { background-color: #3498db; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn { background-color: #3498db; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px; }
         .btn:hover { background-color: #2980b9; }
+        .btn-save { background-color: #10b981; }
+        .btn-save:hover { background-color: #059669; }
         #preview { margin-top: 30px; padding: 20px; border: 1px dashed #ccc; display: none; }
         
-        /* Botón Corporativo de Regresar */
         .btn-regresar {
             display: inline-flex;
             align-items: center;
@@ -76,11 +77,14 @@
     </div>
 
     <button class="btn" onclick="generarNota()">Generar y Vista Previa</button>
+    <button class="btn btn-save" onclick="enviarFormato()">💾 Guardar en la Nube</button>
 </div>
 
 <div id="preview"></div>
 
 <script>
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyIGMX1NbdsvbDykqcYOCVwiIFwsOr-a7O_lSPjaOufq0kk9YGQdJ0WiuK9xrFjzfKI/exec";
+
     function generarNota() {
         const tipo = document.getElementById('tipoDoc').value;
         const cliente = document.getElementById('cliente').value;
@@ -103,18 +107,8 @@
             </div>
             <p><strong>Cliente:</strong> ${cliente}</p>
             <table>
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>${desc}</td>
-                        <td>$${monto.toFixed(2)}</td>
-                    </tr>
-                </tbody>
+                <thead><tr><th>Descripción</th><th>Total</th></tr></thead>
+                <tbody><tr><td>${desc}</td><td>$${monto.toFixed(2)}</td></tr></tbody>
             </table>
             <div style="text-align:right;">
                 <p>Subtotal: $${subtotal.toFixed(2)}</p>
@@ -127,8 +121,27 @@
         document.getElementById('preview').innerHTML = contenido;
         document.getElementById('preview').style.display = 'block';
     }
-</script>
 
+    function enviarFormato() {
+        const tipo = document.getElementById('tipoDoc').value;
+        const cliente = document.getElementById('cliente').value;
+        const desc = document.getElementById('desc').value;
+        const monto = document.getElementById('monto').value;
+
+        if(!cliente || !monto) { alert("Por favor llena los campos obligatorios."); return; }
+
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                sheet: "Formatos",
+                row: [tipo, cliente, desc, monto]
+            })
+        }).then(() => {
+            alert("¡Formato registrado con éxito en la nube!");
+        }).catch(err => alert("Error al conectar con la nube: " + err));
+    }
+</script>
 </body>
 </html>
-
