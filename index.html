@@ -3,327 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Herramientas Prácticas</title>
+    <title>Portal de Distribuidores - Registro de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-dark: #0f172a;
-            --accent-blue: #3b82f6;
-            --border-color: #e2e8f0;
-            --bg-body: #f1f5f9;
-            --text-main: #334155;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--primary-dark);
-            margin: 0;
-            padding: 2rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .dashboard-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .dashboard-header h1 {
-            margin: 0;
-            font-size: 1.75rem;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-
-        .dashboard-header p {
-            margin: 0.5rem 0 0 0;
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-
-        /* Contenedor principal en dos columnas para pantallas grandes */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1.2fr 1fr;
-                align-items: start;
-            }
-        }
-
-        /* Tarjetas comunes */
-        .card {
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-        }
-
-        .card-header {
-            background-color: var(--primary-dark);
+        body { background-color: #f1f5f9; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .card { border-radius: 16px; border: none; }
+        .brand-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
-            padding: 1.25rem 1.5rem;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .card-body {
-            padding: 1.75rem;
-        }
-
-        /* Estilos de la Calculadora */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #64748b;
-            text-transform: uppercase;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-wrapper span {
-            position: absolute;
-            left: 12px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 10px 12px 10px 30px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            outline: none;
-            color: var(--primary-dark);
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .summary-card {
-            background-color: #f8fafc;
-            border-radius: 10px;
-            padding: 1.25rem;
-            margin-top: 1rem;
-            border: 1px dashed var(--border-color);
-        }
-
-        .summary-card .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-size: 0.95rem;
-            color: #475569;
-        }
-
-        .summary-card .summary-row.total-row {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px dashed #cbd5e1;
-            color: var(--primary-dark);
-            font-weight: 800;
-            font-size: 1.2rem;
-        }
-
-        .total-amount {
-            color: var(--accent-blue);
-        }
-
-        /* Estilos del Menú de Herramientas */
-        .tools-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .tools-list li {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tools-list li:last-child {
-            border-bottom: none;
-        }
-
-        .tools-list a {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.25rem;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .tools-list a:hover {
-            background-color: #f8fafc;
-            color: var(--accent-blue);
-            padding-left: 1.5rem;
-        }
-
-        /* Icono por defecto para las prácticas normales */
-        .tools-list a::before {
-            content: "⚙️";
-            margin-right: 12px;
-            font-size: 1rem;
-            filter: grayscale(1);
-            transition: filter 0.2s ease;
-        }
-
-        /* Icono de camión específico para el módulo de distribuidores */
-        .tools-list .distribuidor-btn::before {
-            content: "🚚" !important;
-            filter: none !important;
-        }
-
-        .tools-list a:hover::before {
-            filter: grayscale(0);
-        }
-
-        .footer-note {
+            border-radius: 16px 16px 0 0;
+            padding: 25px;
             text-align: center;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 3rem;
-            width: 100%;
         }
+        .btn-submit {
+            background-color: #0ea5e9;
+            border: none;
+            font-weight: 600;
+            padding: 12px;
+            transition: all 0.2s ease;
+        }
+        .btn-submit:hover { background-color: #0284c7; }
+        .btn-regresar {
+            display: inline-flex; align-items: center; background-color: #475569; color: white; padding: 8px 16px;
+            border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;
+        }
+        .btn-regresar:hover { background-color: #334155; color: white; }
     </style>
 </head>
 <body>
 
-<div class="dashboard-header">
-    <h1>SISTEMA DE MODULOS ADMINISTRATIVOS</h1>
-    <p>Planta de Producción - Herramientas de Prácticas Profesionales</p>
-</div>
+<div class="container py-4" style="max-width: 600px;">
+    
+    <a href="index.html" class="btn-regresar">⬅️ Volver al Panel</a>
 
-<div class="dashboard-grid">
-    <div class="card">
-        <div class="card-header">
-            <h2>Cotizador de Productos</h2>
+    <div class="card shadow-sm">
+        <div class="brand-header">
+            <h3 class="mb-1">🚚 Portal de Distribuidores</h3>
+            <p class="mb-0 small text-white-50">Registro Oficial de Ventas y Colocación de Producto</p>
         </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label for="precio">Precio Unitario</label>
-                <div class="input-wrapper">
-                    <span>$</span>
-                    <input type="number" id="precio" placeholder="0.00" step="0.01" oninput="calcular()">
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="cantidad">Cantidad de Pedido</label>
-                <div class="input-wrapper">
-                    <span>#</span>
-                    <input type="number" id="cantidad" placeholder="0" oninput="calcular()" style="padding-left: 30px;">
+        <div class="card-body p-4">
+            <form id="formDistribuidor" onsubmit="enviarVentaDistribuidor(event)">
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Ruta / Nombre del Distribuidor</label>
+                    <select id="distribuidorId" class="form-select" required>
+                        <option value="" selected disabled>Selecciona tu Ruta...</option>
+                        <option value="Distribuidor Norte - Ruta 1">Distribuidor Norte - Ruta 1</option>
+                        <option value="Distribuidor Sur - Ruta 2">Distribuidor Sur - Ruta 2</option>
+                        <option value="Distribuidor Centro - Ruta 3">Distribuidor Centro - Ruta 3</option>
+                        <option value="Foráneo - Ruta 4">Foráneo - Ruta 4</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="impuesto">Tasa de Impuestos (%)</label>
-                <div class="input-wrapper">
-                    <span style="left: auto; right: 12px;">%</span>
-                    <input type="number" id="impuesto" value="16" step="0.1" oninput="calcular()" style="padding-left: 15px; padding-right: 30px;">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Producto Colocado</label>
+                    <select id="productoVendido" class="form-select" required>
+                        <option value="" selected disabled>Selecciona el producto...</option>
+                        <option value="Papel Higiénico (Pack 4)">Papel Higiénico (Pack 4)</option>
+                        <option value="Papel Higiénico (Industrial)">Papel Higiénico (Industrial)</option>
+                        <option value="Servilletas (Paquete 50u)">Servilletas (Paquete 50u)</option>
+                        <option value="Servilletas (Cocktail)">Servilletas (Cocktail)</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="summary-card">
-                <div class="summary-row">
-                    <span>Subtotal Neto</span>
-                    <span id="res-subtotal">$0.00</span>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Cantidad Entregada (Paquetes/Bultos)</label>
+                    <input type="number" id="cantidadVendida" class="form-control" placeholder="Ej. 50" min="1" required>
                 </div>
-                <div class="summary-row">
-                    <span>Impuestos Aplicados</span>
-                    <span id="res-impuesto">$0.00</span>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-secondary">Establecimiento / Cliente Destino</label>
+                    <input type="text" id="clienteDestino" class="form-control" placeholder="Ej. Tienda La Principal o MiniSuper" required>
                 </div>
-                <div class="summary-row total-row">
-                    <span>TOTAL A PAGAR</span>
-                    <span id="res-total" class="total-amount">$0.00</span>
-                </div>
-            </div>
+
+                <button type="submit" class="btn btn-primary w-100 btn-submit text-white shadow-sm">
+                    💾 Registrar y Reportar Venta
+                </button>
+            </form>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header" style="background-color: #334155;">
-            <h2>Módulos Disponibles</h2>
-        </div>
-        <ul class="tools-list">
-            <li><a href="practica2.html">Generador de formatos</a></li>
-            <li><a href="practica3.html">Control de producción</a></li>
-            <li><a href="practica4.html">Calculadora de rendimiento</a></li>
-            <li><a href="practica5.html">Generador de etiquetas de lote</a></li>
-            <li><a href="practica6.html">Registro de producto no conforme</a></li>
-            <li style="background-color: #f0fdf4;"><a href="distribuidores.html" class="distribuidor-btn" style="color: #16a34a; font-weight: 700;">Portal de distribuidores</a></li>
-        </ul>
     </div>
 </div>
 
-<div class="footer-note">
-    Desarrollado de forma remota para control interno de producción. Todos los derechos reservados.
-</div>
+<script>
+    // URL Única de tu Webhook limpia y vinculada a tu Apps Script
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxFF_4k9Thv-W9Q7H2tAPxuckuLcvb9fsfhnz9mKN7qd6Ylai_4fpn-lL3H9E2KDOxLzw/exec";
 
-<script {nonce}>
-    function calcular() {
-        const precio = parseFloat(document.getElementById('precio').value) || 0;
-        const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
-        const impuestoPorcentaje = parseFloat(document.getElementById('impuesto').value) || 0;
+    function enviarVentaDistribuidor(event) {
+        event.preventDefault(); // Previene que la página se recargue
 
-        const subtotal = precio * cantidad;
-        const impuestoMonto = subtotal * (impuestoPorcentaje / 100);
-        const total = subtotal + impuestoMonto;
+        // Recopilación de los datos ingresados por el distribuidor externo
+        const distribuidor = document.getElementById('distribuidorId').value;
+        const producto = document.getElementById('productoVendido').value;
+        const cantidad = document.getElementById('cantidadVendida').value;
+        const cliente = document.getElementById('clienteDestino').value;
 
-        document.getElementById('res-subtotal').innerText = formatoMoneda(subtotal);
-        document.getElementById('res-impuesto').innerText = formatoMoneda(impuestoMonto);
-        document.getElementById('res-total').innerText = formatoMoneda(total);
-    }
+        // Estructura exacta con .sheet y .row para coincidir al 100% con tu backend de Google Apps Script
+        const datosAPICorregidos = {
+            sheet: "Ventas_Distribuidores", 
+            row: [distribuidor, producto, cantidad, cliente] 
+        };
 
-    function formatoMoneda(valor) {
-        return '$' + valor.toLocaleString('es-MX', { 
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
+        // Envío seguro de datos mediante POST a Google Apps Script
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datosAPICorregidos)
+        })
+        .then(() => {
+            alert("¡Venta reportada con éxito a la administración de la planta!");
+            document.getElementById('formDistribuidor').reset(); // Limpia el formulario para la siguiente venta
+        })
+        .catch(err => {
+            alert("Error de conexión al reportar el registro: " + err);
         });
     }
-
-    calcular();
 </script>
-
 </body>
 </html>
