@@ -146,7 +146,7 @@
             border: 1px dashed var(--border-color);
         }
 
-        .summary-row {
+        .summary-card .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.75rem;
@@ -154,7 +154,7 @@
             color: #475569;
         }
 
-        .summary-row.total-row {
+        .summary-card .summary-row.total-row {
             margin-top: 1rem;
             padding-top: 1rem;
             border-top: 2px dashed #cbd5e1;
@@ -199,12 +199,19 @@
             padding-left: 1.5rem;
         }
 
+        /* Icono por defecto para las prácticas normales */
         .tools-list a::before {
             content: "⚙️";
             margin-right: 12px;
             font-size: 1rem;
             filter: grayscale(1);
             transition: filter 0.2s ease;
+        }
+
+        /* Icono de camión específico para el módulo de distribuidores */
+        .tools-list .distribuidor-btn::before {
+            content: "🚚" !important;
+            filter: none !important;
         }
 
         .tools-list a:hover::before {
@@ -228,7 +235,6 @@
 </div>
 
 <div class="dashboard-grid">
-    <!-- COLUMNA 1: COTIZADOR -->
     <div class="card">
         <div class="card-header">
             <h2>Cotizador de Productos</h2>
@@ -275,7 +281,6 @@
         </div>
     </div>
 
-    <!-- COLUMNA 2: MENÚ DE ACCESOS ACTUALIZADO -->
     <div class="card">
         <div class="card-header" style="background-color: #334155;">
             <h2>Módulos Disponibles</h2>
@@ -286,6 +291,7 @@
             <li><a href="practica4.html">Calculadora de rendimiento</a></li>
             <li><a href="practica5.html">Generador de etiquetas de lote</a></li>
             <li><a href="practica6.html">Registro de producto no conforme</a></li>
+            <li style="background-color: #f0fdf4;"><a href="distribuidores.html" class="distribuidor-btn" style="color: #16a34a; font-weight: 700;">Portal de distribuidores</a></li>
         </ul>
     </div>
 </div>
@@ -294,7 +300,7 @@
     Desarrollado de forma remota para control interno de producción. Todos los derechos reservados.
 </div>
 
-<script>
+<script {nonce}>
     function calcular() {
         const precio = parseFloat(document.getElementById('precio').value) || 0;
         const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
